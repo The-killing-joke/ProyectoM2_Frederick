@@ -1,0 +1,31 @@
+{
+  "name": "proyectom2_frederick",
+  "version": "1.0.0",
+  "description": "API REST de MiniBlog para gestionar authors y posts, construida con Node.js, Express y PostgreSQL (pg). Incluye CRUD, validaciones, tests con Vitest y Supertest, documentación OpenAPI y deploy en Railway",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/The-killing-joke/ProyectoM2_Frederick.git"
+  },
+  "keywords": ["express", "postgresql", "api", "blog"],
+  "author": "Frederick",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/The-killing-joke/ProyectoM2_Frederick/issues"
+  },
+  "homepage": "https://github.com/The-killing-joke/ProyectoM2_Frederick#readme",
+  "dependencies": {
+    "express": "^5.3.0",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "supertest": "^7.3.2",
+    "vitest": "^5.1.0"
+  }
+}
