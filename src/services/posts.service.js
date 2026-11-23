@@ -1,57 +1,58 @@
-const authorsService = require('./authors.service');
+const pool = require('../db/pool');
 
-// Datos temporales en memoria, iguales a los de seed.sql.
-let posts = [
-  { id: 1, title: 'Introducción a Node.js', content: 'Node.js es un runtime de JavaScript...', author_id: 1, published: true },
-  { id: 2, title: 'PostgreSQL vs MySQL', content: 'Ambas bases de datos tienen ventajas...', author_id: 2, published: true },
-  { id: 3, title: 'APIs RESTful', content: 'REST es un estilo arquitectónico...', author_id: 1, published: true },
-  { id: 4, title: 'Manejo de errores en Express', content: 'El manejo apropiado de errores...', author_id: 3, published: false },
-  { id: 5, title: 'Async/Await explicado', content: 'Las promesas simplifican el código asíncrono...', author_id: 1, published: false },
-];
-
-let nextId = 6;
+const POST_COLUMNS = 'id, title, content, author_id, published, created_at';
 
 async function getAllPosts() {
-  return posts;
+  const result = await pool.query(`SELECT ${POST_COLUMNS} FROM posts ORDER BY id`);
+  return result.rows;
 }
 
 async function getPostById(id) {
-  return posts.find((post) => post.id === id) ?? null;
+  const result = await pool.query(`SELECT ${POST_COLUMNS} FROM posts WHERE id = $1`, [id]);
+  return result.rows[0] ?? null;
 }
 
-// Devuelve los posts de un author con su nombre y email en cada post,
-// igual que el resultado del JOIN que probé en SQL.
+// Es el JOIN que probé en psql, con el authorId como parámetro.
+// Uso alias para que el id y el created_at del post no se confundan con los del author.
 async function getPostsByAuthor(authorId) {
-  const author = await authorsService.getAuthorById(authorId);
-  if (!author) return [];
-
-  return posts
-    .filter((post) => post.author_id === authorId)
-    .map((post) => ({ ...post, author_name: author.name, author_email: author.email }));
+  const result = await pool.query(
+    `SELECT p.id, p.title, p.content, p.author_id, p.published, p.created_at,
+            a.name AS author_name, a.email AS author_email
+     FROM posts p
+     INNER JOIN authors a ON p.author_id = a.id
+     WHERE p.author_id = $1
+     ORDER BY p.id`,
+    [authorId]
+  );
+  return result.rows;
 }
 
-// Si no envían published, el post queda como borrador (igual que DEFAULT FALSE en la base).
+// Si no envían published, la base usa su DEFAULT FALSE. Por eso uso COALESCE:
+// si el valor es null, toma el default de la columna.
 async function createPost({ title, content, author_id, published }) {
-  const newPost = { id: nextId++, title, content, author_id, published: published ?? false };
-  posts.push(newPost);
-  return newPost;
+  const result = await pool.query(
+    `INSERT INTO posts (title, content, author_id, published)
+     VALUES ($1, $2, $3, COALESCE($4, FALSE))
+     RETURNING ${POST_COLUMNS}`,
+    [title, content, author_id, published ?? null]
+  );
+  return result.rows[0];
 }
 
 async function updatePost(id, { title, content, author_id, published }) {
-  const post = posts.find((p) => p.id === id);
-  if (!post) return null;
-
-  post.title = title;
-  post.content = content;
-  post.author_id = author_id;
-  post.published = published ?? false;
-  return post;
+  const result = await pool.query(
+    `UPDATE posts
+     SET title = $1, content = $2, author_id = $3, published = COALESCE($4, FALSE)
+     WHERE id = $5
+     RETURNING ${POST_COLUMNS}`,
+    [title, content, author_id, published ?? null, id]
+  );
+  return result.rows[0] ?? null;
 }
 
 async function deletePost(id) {
-  const totalBefore = posts.length;
-  posts = posts.filter((p) => p.id !== id);
-  return posts.length < totalBefore;
+  const result = await pool.query('DELETE FROM posts WHERE id = $1', [id]);
+  return result.rowCount > 0;
 }
 
 module.exports = { getAllPosts, getPostById, getPostsByAuthor, createPost, updatePost, deletePost };

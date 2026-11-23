@@ -14,10 +14,25 @@ try {
 // Importo la app después de cargar las variables, porque la conexión a la base
 // de datos las va a necesitar en el momento en que se importe.
 const app = require('./app');
+const pool = require('./db/pool');
 
-// Uso el puerto que me dé el entorno (Railway asigna el suyo) o el 3000 en local.
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
-});
+// Antes de levantar el servidor, compruebo que la base de datos responde.
+// Si falla, prefiero que la app se detenga con un mensaje claro y no que
+// arranque y falle en cada petición.
+async function start() {
+  try {
+    await pool.query('SELECT 1');
+    console.log('Conectado a PostgreSQL');
+  } catch (error) {
+    console.error('No se pudo conectar a PostgreSQL:', error.message);
+    process.exit(1);
+  }
+
+  app.listen(PORT, () => {
+    console.log(`Servidor escuchando en http://localhost:${PORT}`);
+  });
+}
+
+start();
