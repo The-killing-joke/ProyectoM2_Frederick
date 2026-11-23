@@ -1,6 +1,7 @@
 const express = require('express');
 const postsRouter = require('./routes/posts.routes');
 const authorsRouter = require('./routes/authors.routes');
+const { notFound, errorHandler } = require('./middlewares/errorHandler');
 
 // Creo la aplicación de Express. Aquí solo la configuro, no la pongo a escuchar.
 const app = express();
@@ -16,6 +17,11 @@ app.use('/authors', authorsRouter);
 // Conecto el router de posts en la ruta base /posts. Todas las rutas que
 // definí en posts.routes.js se van a anteponer con /posts.
 app.use('/posts', postsRouter); 
+
+// Si ninguna ruta respondió, es un 404,
+// y si alguna lanzó un error, lo maneja errorHandler.
+app.use(notFound);
+app.use(errorHandler);
 
 // Ruta de prueba para comprobar que la API está funcionando.
 // También me sirve para verificar el deploy en Railway.
