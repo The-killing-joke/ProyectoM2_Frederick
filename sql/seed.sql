@@ -13,3 +13,10 @@ INSERT INTO posts (title, content, author_id, published) VALUES
  ('APIs RESTful', 'REST es un estilo arquitectónico...', 1, true),
  ('Manejo de errores en Express', 'El manejo apropiado de errores...', 3, false),
  ('Async/Await explicado', 'Las promesas simplifican el código asíncrono...', 1, false);
+
+
+INSERT INTO comments (content, post_id, author_id) VALUES
+ ('Muy buena introducción, me aclaró qué es el event loop.', 1, 2),
+ ('¿Podrías hacer una segunda parte sobre módulos?', 1, 3),
+ ('Yo prefiero PostgreSQL por sus tipos de datos.', 2, 1),
+ ('Gracias, justo lo que necesitaba para mi proyecto.', 4, 1);
