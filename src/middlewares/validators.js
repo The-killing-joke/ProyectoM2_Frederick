@@ -63,4 +63,20 @@ function validatePost(req, res, next) {
   next();
 }
 
-module.exports = { validateIdParam, validateAuthor, validatePost };
+function validateComment(req, res, next) {
+  const { content, post_id, author_id } = req.body ?? {};
+  const details = [];
+
+  if (!isNonEmptyString(content)) details.push('content es obligatorio y no puede estar vacío');
+  if (!isPositiveInteger(post_id)) details.push('post_id es obligatorio y debe ser un número entero positivo');
+  // En la base author_id puede ser NULL (por el SET NULL), pero al crear
+  // un comentario siempre tiene que indicarse quién lo escribe.
+  if (!isPositiveInteger(author_id)) details.push('author_id es obligatorio y debe ser un número entero positivo');
+
+  if (details.length > 0) {
+    return res.status(400).json({ error: 'Datos inválidos', details });
+  }
+  next();
+}
+
+module.exports = { validateIdParam, validateAuthor, validatePost, validateComment };
