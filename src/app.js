@@ -11,6 +11,17 @@ const app = express();
 // Sin esto, req.body llega como undefined.
 app.use(express.json());
 
+// Ruta raíz: al abrir la URL pública se ve qué es la API y qué endpoints tiene,
+// en vez de un 404.
+app.get('/', (req, res) => {
+  res.status(200).json({
+    name: 'API MiniBlog',
+    description: 'API REST para gestionar authors, posts y comments',
+    endpoints: ['/health', '/authors', '/posts', '/posts/author/:authorId', '/comments', '/comments/post/:postId'],
+    docs: 'https://github.com/The-killing-joke/ProyectoM2_Frederick/blob/main/docs/openapi.yaml',
+  });
+});
+
 // Ruta de prueba para comprobar que la API está funcionando.
 // También me sirve para verificar el deploy en Railway.
 app.get('/health', (req, res) => {

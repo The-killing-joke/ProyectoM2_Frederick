@@ -36,6 +36,12 @@ describe('GET /health', () => {
     expect(res.status).toBe(200);
     expect(res.body.status).toBe('ok');
   });
+
+  test('GET / responde 200 con la información de la API', async () => {
+    const res = await request(app).get('/');
+    expect(res.status).toBe(200);
+    expect(res.body.name).toBe('API MiniBlog');
+  });
 });
 
 describe('Authors', () => {

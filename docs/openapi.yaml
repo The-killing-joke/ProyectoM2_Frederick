@@ -9,6 +9,8 @@ info:
 servers:
   - url: http://localhost:3000
     description: Servidor local
+  - url: https://proyectom2frederick-production.up.railway.app/
+    description: Servidor de producción en Railway
 
 tags:
   - name: Health
