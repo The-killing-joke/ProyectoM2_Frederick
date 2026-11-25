@@ -16,6 +16,9 @@
   "author": "Frederick",
   "license": "ISC",
   "type": "commonjs",
+  "engines": {
+  "node": ">=22"
+  },
   "bugs": {
     "url": "https://github.com/The-killing-joke/ProyectoM2_Frederick/issues"
   },
