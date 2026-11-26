@@ -438,9 +438,10 @@ Durante el proyecto usé IA (Claude) como **tutor y revisor técnico**, no como 
 
 En el diseño de la base de datos tomé yo las decisiones (constraints, `CASCADE`, índices, valor por defecto de `published`), y la IA revisaba mi razonamiento y corregía mis errores de concepto. También escribí y probé por mi cuenta los scripts SQL y las consultas manuales (`JOIN`, errores de constraints, cascada).
 
-En la etapa final, por el tiempo disponible, pedí que me entregara el código por partes con comentarios explicativos. Mi trabajo fue integrarlo, probarlo en Postman y con los tests, depurar los errores que aparecieron (rutas de `require`, orden de middlewares, orden de los `DROP`, variables y URL interna o pública en Railway) y preguntar cada concepto que no entendía.
+A partir de la etapa de Express, por mis responsabilidades laborales, cambié la forma de trabajo: usé la IA para definir los pasos uno a uno y pedí que me entregara el código de cada sección con comentarios que explicaran qué hace cada parte y por qué. Mi trabajo en esa etapa fue integrar cada sección en el proyecto, probarla en Postman y con los tests, depurar los errores que aparecieron (rutas de `require`, orden de los middlewares, orden de los `DROP` en `setup.sql`, variables y URL interna o pública en Railway) y preguntar cada concepto que no entendía antes de avanzar. También tomé decisiones propias, como no saltarme el paso de los endpoints con arrays en memoria y ejecutar los scripts desde la Console de Railway para no exponer la base de datos.
 
-El registro completo, con los prompts, las respuestas, mis comentarios y capturas de las conversaciones, está en [`docs/REGISTRO_USO_IA.md`](./docs/REGISTRO_USO_IA.md).
+
+El registro completo, con los prompts, las respuestas, mis comentarios y capturas de las conversaciones, está en [`docs/REGISTRO_USO_IA.pdf`](./docs/REGISTRO_USO_IA.pdf).
 
 ---
 
